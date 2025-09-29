@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ISBN Validator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>📚 ISBN Validator</h1>
+    <p>Check if your ISBN codes are valid with a sleek, interactive validator</p>
+  </header>
+
+  <main>
+    <section class="input-section">
+      <h2>Enter Your ISBN Details</h2>
+      <div class="input-container">
+        <input type="text" id="isbnInput" placeholder="e.g., 1530051126,10" />
+        <button id="validateBtn">Validate</button>
+      </div>
+      <div class="message" id="message"></div>
+    </section>
+
+    <section class="info-section">
+      <h2>How it Works</h2>
+      <ul>
+        <li>Enter an ISBN code without hyphens</li>
+        <li>Specify the length (10 or 13)</li>
+        <li>Click "Validate" to see if it's correct</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built with ❤️ by Jordan Leturgez | <a href="https://github.com/yourgithub" target="_blank">GitHub</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
