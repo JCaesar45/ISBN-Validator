@@ -1,0 +1,152 @@
+// script.js
+
+// Functions for calculating check digits
+function calculate_check_digit_10(mainDigits) {
+  let sum = 0;
+  for (let i=0; i<mainDigits.length; i++) {
+    sum += mainDigits[i] * (10 - i);
+  }
+  const result = 11 - (sum % 11);
+  if (result === 11) return '0';
+  if (result === 10) return 'X';
+  return String(result);
+}
+
+function calculate_check_digit_13(mainDigits) {
+  let sum = 0;
+  for (let i=0; i<mainDigits.length; i++) {
+    sum += mainDigits[i] * (i % 2 === 0 ? 1 : 3);
+  }
+  const result = 10 - (sum % 10);
+  return result === 10 ? '0' : String(result);
+}
+
+// Main validation function with creative feedback
+function validateISBN() {
+  const inputEl = document.getElementById('isbnInput');
+  const messageEl = document.getElementById('message');
+
+  const input = inputEl.value.trim();
+
+  // Clear previous message
+  messageEl.textContent = '';
+  messageEl.className = '';
+
+  // Check for comma
+  if (!input.includes(',')) {
+    messageEl.textContent = 'Enter comma-separated values.';
+    messageEl.className = 'invalid';
+    return;
+  }
+
+  const parts = input.split(',');
+  if (parts.length !== 2) {
+    messageEl.textContent = 'Enter comma-separated values.';
+    messageEl.className = 'invalid';
+    return;
+  }
+
+  let [isbn, lengthStr] = parts;
+  isbn = isbn.trim();
+  lengthStr = lengthStr.trim();
+
+  // Validate length
+  let length;
+  try {
+    length = parseInt(lengthStr);
+  } catch {
+    messageEl.textContent = 'Length must be a number.';
+    messageEl.className = 'invalid';
+    return;
+  }
+
+  if (!(length === 10 || length === 13)) {
+    messageEl.textContent = 'Length should be 10 or 13.';
+    messageEl.className = 'invalid';
+    return;
+  }
+
+  // Validate character set based on length
+  if (length === 10) {
+    // ISBN-10: digits or 'X' at end
+    const validChars = /^(?:\d{9}[0-9X])$/i;
+    if (!validChars.test(isbn)) {
+      messageEl.textContent = 'Invalid character was found.';
+      messageEl.className = 'invalid';
+      return;
+    }
+  } else {
+    // ISBN-13: only digits
+    if (!/^\d+$/.test(isbn)) {
+      messageEl.textContent = 'Invalid character was found.';
+      messageEl.className = 'invalid';
+      return;
+    }
+  }
+
+  // Check length matches
+  if (isbn.length !== length) {
+    if (length === 10) {
+      messageEl.textContent = 'ISBN-10 code should be 10 digits long.';
+    } else {
+      messageEl.textContent = 'ISBN-13 code should be 13 digits long.';
+    }
+    messageEl.className = 'invalid';
+    return;
+  }
+
+  // Convert main digits to array of integers
+  let mainDigits = [];
+  try {
+    for (let i=0; i<isbn.length - 1; i++) {
+      mainDigits.push(parseInt(isbn[i]));
+    }
+  } catch {
+    messageEl.textContent = 'Invalid character was found.';
+    messageEl.className = 'invalid';
+    return;
+  }
+
+  // Check for invalid characters
+  for (let ch of isbn.slice(0, -1)) {
+    if (!/\d/.test(ch)) {
+      messageEl.textContent = 'Invalid character was found.';
+      messageEl.className = 'invalid';
+      return;
+    }
+  }
+
+  const checkChar = isbn[isbn.length - 1].toUpperCase();
+
+  // Calculate expected check digit
+  let expectedCheckDigit;
+  if (length === 10) {
+    expectedCheckDigit = calculate_check_digit_10(mainDigits);
+    if (checkChar !== expectedCheckDigit) {
+      messageEl.textContent = 'Invalid ISBN Code.';
+      messageEl.className = 'invalid';
+      return;
+    }
+  } else {
+    expectedCheckDigit = calculate_check_digit_13(mainDigits);
+    if (checkChar !== expectedCheckDigit) {
+      messageEl.textContent = 'Invalid ISBN Code.';
+      messageEl.className = 'invalid';
+      return;
+    }
+  }
+
+  // If all good
+  messageEl.textContent = '✅ Valid ISBN Code!';
+  messageEl.className = 'valid';
+}
+
+// Add event listener
+document.getElementById('validateBtn').addEventListener('click', validateISBN);
+
+// Optional: Enter key triggers validation
+document.getElementById('isbnInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    validateISBN();
+  }
+});
