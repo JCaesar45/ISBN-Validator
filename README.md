@@ -20,11 +20,11 @@ A Python program that validates ISBN-10 and ISBN-13 codes based on user input. I
 2. When prompted, enter the ISBN and its length separated by a comma, with no hyphens or spaces.  
    **Format:** `ISBN,Length`  
    **Examples:**  
-   ```
+   ``
    1530051126,10
    9781530051120,13
    080442957X,10
-   ```
+   ``
 
 3. The program will output whether the ISBN code is valid or specify the type of error.
 
@@ -58,7 +58,7 @@ A Python program that validates ISBN-10 and ISBN-13 codes based on user input. I
 ```python
 # Uncomment the following line to enable running the main function
 # main()
-```
+``
 
 **Note:** Remember to comment out or remove the call to `main()` when running automated tests to avoid interference.
 
